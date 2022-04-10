@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
         vector<KeyPoint> keypoints;
         Mat descriptor;
         detector->detectAndCompute(image, Mat(), keypoints, descriptor);
-        descriptors.push_back(descriptor);
+        descriptors.push_back(descriptor);//the descriptor include a nodeid,parentid,weight and own descriptor
     }
 
     // we can compare the images directly or we can compare one image to a database 
@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
     cout << "comparing images with images " << endl;
     for (int i = 0; i < images.size(); i++) {
         DBoW3::BowVector v1;
-        vocab.transform(descriptors[i], v1);
+        vocab.transform(descriptors[i], v1);//the combination of each wordid and its nodeid
         for (int j = i; j < images.size(); j++) {
             DBoW3::BowVector v2;
             vocab.transform(descriptors[j], v2);

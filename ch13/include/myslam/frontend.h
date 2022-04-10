@@ -134,7 +134,8 @@ class Frontend {
     int num_features_needed_for_keyframe_ = 80;
 
     // utilities
-    cv::Ptr<cv::GFTTDetector> gftt_;  // feature detector in opencv
+    //cv::Ptr<cv::GFTTDetector> gftt_;  // feature detector in opencv
+    cv::Ptr<cv::FastFeatureDetector> gftt_;
 };
 
 }  // namespace myslam

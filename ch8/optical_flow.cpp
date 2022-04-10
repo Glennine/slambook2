@@ -11,8 +11,10 @@
 using namespace std;
 using namespace cv;
 
-string file_1 = "./LK1.png";  // first image
-string file_2 = "./LK2.png";  // second image
+//string file_1 = "/home/g/CLionProjects/slambook2/ch8/LK1.png";  // first image
+//string file_2 = "/home/g/CLionProjects/slambook2/ch8/LK2.png";  // second image
+string file_1 = "/home/g/CLionProjects/slambook2/ch7/1.png";
+string file_2 = "/home/g/CLionProjects/slambook2/ch7/2.png";
 
 /// Optical flow tracker and interface
 class OpticalFlowTracker {
@@ -112,14 +114,15 @@ int main(int argc, char **argv) {
     // key points, using GFTT here.
     vector<KeyPoint> kp1;
     Ptr<GFTTDetector> detector = GFTTDetector::create(500, 0.01, 20); // maximum 500 keypoints
-    detector->detect(img1, kp1);
+    //orb use ORB detector create Ptr<DescriptorExtractor> descriptor = ORB::create();
+    detector->detect(img1, kp1); //detector result save in kp1
 
     // now lets track these key points in the second image
     // first use single level LK in the validation picture
     vector<KeyPoint> kp2_single;
     vector<bool> success_single;
     OpticalFlowSingleLevel(img1, img2, kp1, kp2_single, success_single);
-
+    // kp1 match and save results in kp2_single and determine the single success
     // then test multi-level LK
     vector<KeyPoint> kp2_multi;
     vector<bool> success_multi;
@@ -142,7 +145,7 @@ int main(int argc, char **argv) {
 
     // plot the differences of those functions
     Mat img2_single;
-    cv::cvtColor(img2, img2_single, CV_GRAY2BGR);
+    cv::cvtColor(img2, img2_single, cv::COLOR_GRAY2BGR);
     for (int i = 0; i < kp2_single.size(); i++) {
         if (success_single[i]) {
             cv::circle(img2_single, kp2_single[i].pt, 2, cv::Scalar(0, 250, 0), 2);
@@ -151,7 +154,7 @@ int main(int argc, char **argv) {
     }
 
     Mat img2_multi;
-    cv::cvtColor(img2, img2_multi, CV_GRAY2BGR);
+    cv::cvtColor(img2, img2_multi, cv::COLOR_GRAY2BGR);
     for (int i = 0; i < kp2_multi.size(); i++) {
         if (success_multi[i]) {
             cv::circle(img2_multi, kp2_multi[i].pt, 2, cv::Scalar(0, 250, 0), 2);
@@ -160,7 +163,7 @@ int main(int argc, char **argv) {
     }
 
     Mat img2_CV;
-    cv::cvtColor(img2, img2_CV, CV_GRAY2BGR);
+    cv::cvtColor(img2, img2_CV, cv::COLOR_GRAY2BGR);
     for (int i = 0; i < pt2.size(); i++) {
         if (status[i]) {
             cv::circle(img2_CV, pt2[i], 2, cv::Scalar(0, 250, 0), 2);
@@ -205,7 +208,7 @@ void OpticalFlowTracker::calculateOpticalFlow(const Range &range) {
         double cost = 0, lastCost = 0;
         bool succ = true; // indicate if this point succeeded
 
-        // Gauss-Newton iterations
+        // Gauss-Newton iterations solve the least squares method
         Eigen::Matrix2d H = Eigen::Matrix2d::Zero();    // hessian
         Eigen::Vector2d b = Eigen::Vector2d::Zero();    // bias
         Eigen::Vector2d J;  // jacobian
@@ -331,11 +334,12 @@ void OpticalFlowMultiLevel(
         // from coarse to fine
         success.clear();
         t1 = chrono::steady_clock::now();
+        //multi images pyr use as single to match the keypoints in each step. return kp1_pyr,kp2_pyr
         OpticalFlowSingleLevel(pyr1[level], pyr2[level], kp1_pyr, kp2_pyr, success, inverse, true);
         t2 = chrono::steady_clock::now();
         auto time_used = chrono::duration_cast<chrono::duration<double>>(t2 - t1);
         cout << "track pyr " << level << " cost time: " << time_used.count() << endl;
-
+        //kp.pt->keypoint position
         if (level > 0) {
             for (auto &kp: kp1_pyr)
                 kp.pt /= pyramid_scale;

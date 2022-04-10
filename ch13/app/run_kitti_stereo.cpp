@@ -5,14 +5,15 @@
 #include <gflags/gflags.h>
 #include "myslam/visual_odometry.h"
 
-DEFINE_string(config_file, "./config/default.yaml", "config file path");
+DEFINE_string(config_file, "/home/g/CLionProjects/slambook2/ch13/config/default.yaml", "config file path");
 
 int main(int argc, char **argv) {
     google::ParseCommandLineFlags(&argc, &argv, true);
 
     myslam::VisualOdometry::Ptr vo(
         new myslam::VisualOdometry(FLAGS_config_file));
-    assert(vo->Init() == true);
+    //assert(vo->Init() == true);
+    vo->Init();
     vo->Run();
 
     return 0;

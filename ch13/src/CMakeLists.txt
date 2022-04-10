@@ -1,4 +1,4 @@
-add_library(myslam SHARED
+add_library(myslam STATIC
         frame.cpp
         mappoint.cpp
         map.cpp
@@ -12,4 +12,4 @@ add_library(myslam SHARED
         dataset.cpp)
 
 target_link_libraries(myslam
-        ${THIRD_PARTY_LIBS})
+        ${THIRD_PARTY_LIBS} fmt::fmt)

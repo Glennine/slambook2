@@ -10,11 +10,13 @@ using namespace cv;
 int main(int argc, char **argv) {
   if (argc != 3) {
     cout << "usage: feature_extraction img1 img2" << endl;
-    return 1;
+    //return 1;
   }
+  string img1file = "/home/g/CLionProjects/slambook2/ch7/1.png";
+  string img2file = "/home/g/CLionProjects/slambook2/ch7/2.png";
   //-- 读取图像
-  Mat img_1 = imread(argv[1], CV_LOAD_IMAGE_COLOR);
-  Mat img_2 = imread(argv[2], CV_LOAD_IMAGE_COLOR);
+  Mat img_1 = imread(img1file, CV_LOAD_IMAGE_COLOR);
+  Mat img_2 = imread(img2file, CV_LOAD_IMAGE_COLOR);
   assert(img_1.data != nullptr && img_2.data != nullptr);
 
   //-- 初始化

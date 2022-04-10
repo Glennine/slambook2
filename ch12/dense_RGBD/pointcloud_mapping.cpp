@@ -17,16 +17,16 @@ int main(int argc, char **argv) {
     vector<cv::Mat> colorImgs, depthImgs;    // 彩色图和深度图
     vector<Eigen::Isometry3d> poses;         // 相机位姿
 
-    ifstream fin("./data/pose.txt");
+    ifstream fin("/home/g/CLionProjects/slambook2/ch12/dense_RGBD/data/pose.txt");
     if (!fin) {
         cerr << "cannot find pose file" << endl;
         return 1;
     }
 
     for (int i = 0; i < 5; i++) {
-        boost::format fmt("./data/%s/%d.%s"); //图像文件格式
-        colorImgs.push_back(cv::imread((fmt % "color" % (i + 1) % "png").str()));
-        depthImgs.push_back(cv::imread((fmt % "depth" % (i + 1) % "png").str(), -1)); // 使用-1读取原始图像
+        boost::format fmt("/%s/%d.%s"); //图像文件格式
+        colorImgs.push_back(cv::imread((fmt % "home/g/CLionProjects/slambook2/ch12/dense_RGBD/data/color" % (i + 1) % "png").str()));
+        depthImgs.push_back(cv::imread((fmt % "home/g/CLionProjects/slambook2/ch12/dense_RGBD/data/depth" % (i + 1) % "png").str(), -1)); // 使用-1读取原始图像
 
         double data[7] = {0};
         for (int i = 0; i < 7; i++) {
@@ -103,6 +103,6 @@ int main(int argc, char **argv) {
 
     cout << "滤波之后，点云共有" << pointCloud->size() << "个点." << endl;
 
-    pcl::io::savePCDFileBinary("map.pcd", *pointCloud);
+    pcl::io::savePCDFileBinary("/home/g/CLionProjects/slambook2/ch12/dense_RGBD/data/map.pcd", *pointCloud);
     return 0;
 }
