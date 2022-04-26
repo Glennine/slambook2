@@ -8,7 +8,7 @@
 DEFINE_string(config_file, "/home/g/CLionProjects/slambook2/ch13/config/default.yaml", "config file path");
 
 int main(int argc, char **argv) {
-    google::ParseCommandLineFlags(&argc, &argv, true);
+    gflags::ParseCommandLineFlags(&argc, &argv, true);
 
     myslam::VisualOdometry::Ptr vo(
         new myslam::VisualOdometry(FLAGS_config_file));
